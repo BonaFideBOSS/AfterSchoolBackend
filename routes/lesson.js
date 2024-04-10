@@ -3,13 +3,30 @@ const db = require("../config/database");
 
 const lesson = express.Router();
 
-lesson.get("/", async (req, res) => {
-  var data = await db.collection("Lessons").find({}).toArray();
-  res.send(data);
-});
+lesson.post("/", async (req, res) => {
+  const params = req.body;
+  const sortOptions = ["subject", "location", "price", "spaces"];
 
-lesson.get("/hello", async (req, res) => {
-  var data = "Hello world";
+  const search = params.search || "";
+  const sortBy = sortOptions.includes(params.sortBy)
+    ? params.sortBy
+    : "subject";
+  const sortOrder = params.sortOrder == "desc" ? -1 : 1;
+
+  var searchQuery = {
+    $or: [
+      { subject: { $regex: search, $options: "i" } },
+      { location: { $regex: search, $options: "i" } },
+    ],
+  };
+  searchQuery = search ? searchQuery : {};
+  var sortQuery = { [sortBy]: sortOrder };
+
+  const data = await db
+    .collection("Lessons")
+    .find(searchQuery)
+    .sort(sortQuery)
+    .toArray();
   res.send(data);
 });
 
