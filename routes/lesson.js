@@ -8,4 +8,9 @@ lesson.get("/", async (req, res) => {
   res.send(data);
 });
 
+lesson.get("/hello", async (req, res) => {
+  var data = "Hello world";
+  res.send(data);
+});
+
 module.exports = lesson;
