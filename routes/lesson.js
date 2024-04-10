@@ -5,19 +5,15 @@ const lesson = express.Router();
 
 lesson.post("/", async (req, res) => {
   const params = req.body;
-  const sortOptions = ["subject", "location", "price", "spaces"];
-
   const search = params.search || "";
-  const sortBy = sortOptions.includes(params.sortBy)
-    ? params.sortBy
-    : "subject";
+  const sortBy = params.sortBy || "subject";
   const sortOrder = params.sortOrder == "desc" ? -1 : 1;
 
+  const searchFields = ["subject", "location"];
   var searchQuery = {
-    $or: [
-      { subject: { $regex: search, $options: "i" } },
-      { location: { $regex: search, $options: "i" } },
-    ],
+    $or: searchFields.map((item) => ({
+      [item]: { $regex: search, $options: "i" },
+    })),
   };
   searchQuery = search ? searchQuery : {};
   var sortQuery = { [sortBy]: sortOrder };
