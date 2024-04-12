@@ -14,8 +14,13 @@ app.use(logRequest("logs.txt"));
 const lessonRouter = require("./routes/lesson");
 app.use("/lessons", lessonRouter);
 
+const orderRouter = require("./routes/order");
+app.use("/order", orderRouter);
+
 app.get("/", async (req, res) => {
   var data = "Hello world";
+  // const db = require("./config/database");
+  // db.collection("Lessons").updateMany({}, { $set: { spaces: 5 } });
   res.send(data);
 });
 
