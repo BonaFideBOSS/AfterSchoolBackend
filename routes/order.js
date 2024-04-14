@@ -6,23 +6,26 @@ const order = express.Router();
 
 order.post("/new", async (req, res) => {
   const order = req.body;
-  const orderStatus = { orderSuccessful: false };
+  const orderStatus = {
+    orderSuccessful: false,
+    errorMessage: "Sorry, your order wasn't accepted.",
+  };
 
   order.ip_address = req.ip;
   order.datetime = new Date();
 
-  const lessonsAvailable = await checkLessonsAvailability(order.lessons_booked);
+  const lessonsAvailable = await checkLessonsAvailability(order.booked_lessons);
 
   if (lessonsAvailable) {
     await db.collection("Orders").insertOne(order);
     orderStatus.orderSuccessful = true;
-    updateLessons(order.lessons_booked);
+    updateLessons(order.booked_lessons);
+  } else {
+    orderStatus.errorMessage = "The selected lessons are no longer available.";
   }
 
   res.send(orderStatus);
 });
-
-module.exports = order;
 
 async function checkLessonsAvailability(cart) {
   cart.forEach((item) => {
@@ -72,3 +75,55 @@ function updateLessons(cart) {
     );
   });
 }
+
+order.post("/myorders", async (req, res) => {
+  const params = req.body;
+  const search = params.search || "";
+  var query = {
+    $or: [
+      { username: { $regex: new RegExp(`^${search}$`, "i") } },
+      { phone: search },
+    ],
+  };
+  query = search ? query : { ip_address: req.ip };
+  var pipeline = [
+    { $match: query },
+    {
+      $unwind: "$booked_lessons",
+    },
+    {
+      $lookup: {
+        from: "Lessons",
+        localField: "booked_lessons._id",
+        foreignField: "_id",
+        as: "lessonDetails",
+      },
+    },
+    {
+      $unwind: "$lessonDetails",
+    },
+    {
+      $addFields: {
+        booked_lessons: {
+          $mergeObjects: ["$booked_lessons", "$lessonDetails"],
+        },
+      },
+    },
+    {
+      $group: {
+        _id: "$_id",
+        username: { $first: "$username" },
+        phone: { $first: "$phone" },
+        total_price: { $first: "$total_price" },
+        ip_address: { $first: "$ip_address" },
+        datetime: { $first: "$datetime" },
+        booked_lessons: { $push: "$booked_lessons" },
+      },
+    },
+    { $sort: { datetime: -1 } },
+  ];
+  const data = await db.collection("Orders").aggregate(pipeline).toArray();
+  res.send(data);
+});
+
+module.exports = order;
