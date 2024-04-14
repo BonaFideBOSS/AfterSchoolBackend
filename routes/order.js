@@ -70,7 +70,7 @@ async function checkLessonsAvailability(cart) {
 function updateLessons(cart) {
   cart.forEach((item) => {
     db.collection("Lessons").updateOne(
-      { _id: new ObjectId(item._id) },
+      { _id: new ObjectId(item._id), spaces: { $gt: 0 } },
       { $inc: { spaces: -item.quantity } }
     );
   });
