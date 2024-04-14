@@ -18,8 +18,8 @@ order.post("/new", async (req, res) => {
 
   if (lessonsAvailable) {
     await db.collection("Orders").insertOne(order);
+    await updateLessons(order.booked_lessons);
     orderStatus.orderSuccessful = true;
-    updateLessons(order.booked_lessons);
   } else {
     orderStatus.errorMessage = "The selected lessons are no longer available.";
   }
@@ -67,12 +67,14 @@ async function checkLessonsAvailability(cart) {
   return lessons.length == cart.length;
 }
 
-function updateLessons(cart) {
-  cart.forEach((item) => {
-    db.collection("Lessons").updateOne(
-      { _id: new ObjectId(item._id), spaces: { $gt: 0 } },
-      { $inc: { spaces: -item.quantity } }
-    );
+async function updateLessons(cart) {
+  await cart.forEach(async (item) => {
+    await db
+      .collection("Lessons")
+      .updateOne(
+        { _id: new ObjectId(item._id), spaces: { $gt: 0 } },
+        { $inc: { spaces: -item.quantity } }
+      );
   });
 }
 
