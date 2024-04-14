@@ -1,6 +1,6 @@
 const express = require("express");
+const { db, client } = require("../config/database");
 const { ObjectId } = require("mongodb");
-const db = require("../config/database");
 
 const order = express.Router();
 
@@ -14,68 +14,84 @@ order.post("/new", async (req, res) => {
   order.ip_address = req.ip;
   order.datetime = new Date();
 
-  const lessonsAvailable = await checkLessonsAvailability(order.booked_lessons);
+  const session = client.startSession();
+  session.startTransaction();
 
-  if (lessonsAvailable) {
-    await db.collection("Orders").insertOne(order);
-    await updateLessons(order.booked_lessons);
+  try {
+    if (!(await areLessonsAvailable(order.booked_lessons, session))) {
+      orderStatus.errorMessage =
+        "The selected lessons are no longer available.";
+      throw Error(orderStatus.errorMessage);
+    }
+
+    await updateLessons(order.booked_lessons, session);
+    await db.collection("Orders").insertOne(order, { session });
+    await session.commitTransaction();
+
     orderStatus.orderSuccessful = true;
-  } else {
-    orderStatus.errorMessage = "The selected lessons are no longer available.";
+  } catch (error) {
+    console.error("Error processing order", error);
+    session.abortTransaction();
+  } finally {
+    session.endSession();
   }
 
   res.send(orderStatus);
 });
 
-async function checkLessonsAvailability(cart) {
+async function areLessonsAvailable(cart, session) {
   cart.forEach((item) => {
     item._id = new ObjectId(item._id);
   });
 
   const lessons = await db
     .collection("Lessons")
-    .aggregate([
-      {
-        $match: {
-          _id: { $in: cart.map((item) => item._id) },
-        },
-      },
-      {
-        $addFields: {
-          cartItem: {
-            $arrayElemAt: [
-              {
-                $filter: {
-                  input: cart,
-                  as: "item",
-                  cond: { $eq: ["$$item._id", "$_id"] },
-                },
-              },
-              0,
-            ],
+    .aggregate(
+      [
+        {
+          $match: {
+            _id: { $in: cart.map((item) => item._id) },
           },
         },
-      },
-      {
-        $match: {
-          $expr: { $gte: ["$spaces", "$cartItem.quantity"] },
+        {
+          $addFields: {
+            cartItem: {
+              $arrayElemAt: [
+                {
+                  $filter: {
+                    input: cart,
+                    as: "item",
+                    cond: { $eq: ["$$item._id", "$_id"] },
+                  },
+                },
+                0,
+              ],
+            },
+          },
         },
-      },
-    ])
+        {
+          $match: {
+            $expr: { $gte: ["$spaces", "$cartItem.quantity"] },
+          },
+        },
+      ],
+      { session }
+    )
     .toArray();
 
   return lessons.length == cart.length;
 }
 
-async function updateLessons(cart) {
-  await cart.forEach(async (item) => {
+async function updateLessons(cart, session) {
+  for (const item of cart) {
     await db
       .collection("Lessons")
       .updateOne(
         { _id: new ObjectId(item._id), spaces: { $gt: 0 } },
-        { $inc: { spaces: -item.quantity } }
+        { $inc: { spaces: -item.quantity } },
+        { session }
       );
-  });
+  }
 }
 
 order.post("/myorders", async (req, res) => {

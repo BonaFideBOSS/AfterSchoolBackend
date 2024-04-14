@@ -1,13 +1,14 @@
 const { MongoClient } = require("mongodb");
 
 const URI = process.env.MONGO_URI;
-let db;
+var client;
+var db;
 try {
-  const client = new MongoClient(URI);
+  client = new MongoClient(URI);
   db = client.db("AfterSchool");
   console.log("Connected to database.");
 } catch (e) {
-  console.error(e);
+  console.error("Database connection failed. - Error:" + e);
 }
 
-module.exports = db;
+module.exports = { db, client };
