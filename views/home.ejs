@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AfterSchool Server</title>
+
+  <link rel="stylesheet" href="https://bonafideboss.github.io/AfterSchool/assets/mdbootstrap.7.1.0/mdb.css">
+  <link rel="stylesheet" href="https://bonafideboss.github.io/AfterSchool/assets/style.css">
+</head>
+
+<body>
+  <div class="container my-5">
+    <h1 class="px-2 mb-3">
+      <span class="satisfy-regular text-danger fw-bold">After</span><span class="satisfy-regular fw-bold">School</span>
+      <span class="fw-bolder">Server</span>
+    </h1>
+    <h5 class="text-truncate">Website:
+      <a href="https://bonafideboss.github.io/AfterSchool/" target="_blank">
+        https://bonafideboss.github.io/AfterSchool/
+      </a>
+    </h5>
+    <h5 class="text-truncate">GitHub:
+      <a href="https://github.com/BonaFideBOSS/AfterSchoolServer" target="_blank">
+        https://github.com/BonaFideBOSS/AfterSchoolServer
+      </a>
+    </h5>
+  </div>
+
+  <div class="container my-5">
+    <h2 class="fw-bolder mb-4">API Documentation</h2>
+
+    <div class="mb-5">
+      <h3 class="fw-bold mb-0">Lessons</h3>
+      <hr>
+
+      <div class="accordion mb-2" id="lesson-api-one">
+        <div class="accordion-item border-success border">
+          <h2 class="accordion-header">
+            <button class="accordion-button bg-success bg-opacity-10" type="button" data-mdb-toggle="collapse"
+              data-mdb-target="#api-one" data-mdb-collapse-init>
+              <div class="row w-100 row-gap-2 align-items-center">
+                <div class="col-5 col-md-2 col-lg-1">
+                  <span class="w-100 fs-6 badge bg-opacity-75 text-bg-success">POST</span>
+                </div>
+                <div class="col-7 col-md-3 col-lg-2"><span class="fw-bold">/lessons/</span></div>
+                <div class="col-12 col-md-7 col-lg-8"><span>Filter (optional) and retrieve lessons</span></div>
+              </div>
+            </button>
+          </h2>
+          <div id="api-one" class="accordion-collapse collapse" data-mdb-parent="#lesson-api-one">
+            <div class="accordion-body"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion mb-2" id="lesson-api-two">
+        <div class="accordion-item border-warning border">
+          <h2 class="accordion-header">
+            <button class="accordion-button bg-warning bg-opacity-10" type="button" data-mdb-toggle="collapse"
+              data-mdb-target="#api-two" data-mdb-collapse-init>
+              <div class="row w-100 row-gap-2 align-items-center">
+                <div class="col-5 col-md-2 col-lg-1">
+                  <span class="w-100 fs-6 badge bg-opacity-75 text-bg-warning">PUT</span>
+                </div>
+                <div class="col-7 col-md-3 col-lg-2"><span class="fw-bold">/lessons/rate/</span></div>
+                <div class="col-12 col-md-7 col-lg-8"><span>Rate a lesson</span></div>
+              </div>
+            </button>
+          </h2>
+          <div id="api-two" class="accordion-collapse collapse" data-mdb-parent="#lesson-api-two">
+            <div class="accordion-body"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="my-5">
+      <h3 class="fw-bold mb-0">Orders</h3>
+      <hr>
+      <div class="alert bg-success bg-opacity-10 border-success border mb-2 d-flex align-items-center gap-2 flex-wrap">
+        <div class="row w-100 row-gap-2 align-items-center">
+          <div class="col-5 col-md-2 col-lg-1">
+            <span class="w-100 fs-6 badge badge-success bg-opacity-75 text-bg-success">POST</span>
+          </div>
+          <div class="col-7 col-md-3 col-lg-2"><span class="fw-bold">/order/new</span></div>
+          <div class="col-12 col-md-7 col-lg-8"><span>Create a new order</span></div>
+        </div>
+      </div>
+      <div class="alert bg-success bg-opacity-10 border-success border mb-2 d-flex align-items-center gap-2 flex-wrap">
+        <div class="row w-100 row-gap-2 align-items-center">
+          <div class="col-5 col-md-2 col-lg-1">
+            <span class="w-100 fs-6 badge badge-success bg-opacity-75 text-bg-success">POST</span>
+          </div>
+          <div class="col-7 col-md-3 col-lg-2"><span class="fw-bold">/myorders/</span></div>
+          <div class="col-12 col-md-7 col-lg-8"><span>Retrieve a list of orders by ip address (default), name or phone
+              (optional)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="py-4">
+    <div class="container small d-flex flex-column flex-lg-row justify-content-lg-between gap-2 text-center">
+      <p class="mb-0">&copy 2024 AfterSchool</p>
+      <p class="mb-0">Developed by Amaan Al Mir - M00999011</p>
+      <a href="mailto:am4013@live.mdx.ac.uk">am4013@live.mdx.ac.uk</a>
+    </div>
+  </footer>
+
+  <script src="https://bonafideboss.github.io/AfterSchool/assets/mdbootstrap.7.1.0/mdb.umd.js"></script>
+</body>
+
+</html>

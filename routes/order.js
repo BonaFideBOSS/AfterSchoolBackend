@@ -4,7 +4,7 @@ const { ObjectId } = require("mongodb");
 
 const order = express.Router();
 
-order.post("/new", async (req, res) => {
+order.post("/new/", async (req, res) => {
   const order = req.body;
   const orderStatus = {
     orderSuccessful: false,
@@ -31,7 +31,7 @@ order.post("/new", async (req, res) => {
     orderStatus.orderSuccessful = true;
   } catch (error) {
     console.error("Error processing order", error);
-    session.abortTransaction();
+    await session.abortTransaction();
   } finally {
     session.endSession();
   }
@@ -94,7 +94,7 @@ async function updateLessons(cart, session) {
   }
 }
 
-order.post("/myorders", async (req, res) => {
+order.post("/myorders/", async (req, res) => {
   const params = req.body;
   const search = params.search || "";
   var query = {
