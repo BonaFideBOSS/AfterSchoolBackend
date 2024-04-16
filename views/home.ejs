@@ -77,28 +77,73 @@
 
     </div>
 
-    <div class="my-5">
+    <div class="mb-5">
       <h3 class="fw-bold mb-0">Orders</h3>
       <hr>
-      <div class="alert bg-success bg-opacity-10 border-success border mb-2 d-flex align-items-center gap-2 flex-wrap">
-        <div class="row w-100 row-gap-2 align-items-center">
-          <div class="col-5 col-md-2 col-lg-1">
-            <span class="w-100 fs-6 badge badge-success bg-opacity-75 text-bg-success">POST</span>
+
+      <div class="accordion mb-2" id="orders-api-one">
+        <div class="accordion-item border-success border">
+          <h2 class="accordion-header">
+            <button class="accordion-button bg-success bg-opacity-10" type="button" data-mdb-toggle="collapse"
+              data-mdb-target="#api-three" data-mdb-collapse-init>
+              <div class="row w-100 row-gap-2 align-items-center">
+                <div class="col-5 col-md-2 col-lg-1">
+                  <span class="w-100 fs-6 badge bg-opacity-75 text-bg-success">POST</span>
+                </div>
+                <div class="col-7 col-md-3 col-lg-2"><span class="fw-bold">/order/new/</span></div>
+                <div class="col-12 col-md-7 col-lg-8"><span>Create a new order</span></div>
+              </div>
+            </button>
+          </h2>
+          <div id="api-three" class="accordion-collapse collapse" data-mdb-parent="#orders-api-one">
+            <div class="accordion-body"></div>
           </div>
-          <div class="col-7 col-md-3 col-lg-2"><span class="fw-bold">/order/new</span></div>
-          <div class="col-12 col-md-7 col-lg-8"><span>Create a new order</span></div>
         </div>
       </div>
-      <div class="alert bg-success bg-opacity-10 border-success border mb-2 d-flex align-items-center gap-2 flex-wrap">
-        <div class="row w-100 row-gap-2 align-items-center">
-          <div class="col-5 col-md-2 col-lg-1">
-            <span class="w-100 fs-6 badge badge-success bg-opacity-75 text-bg-success">POST</span>
-          </div>
-          <div class="col-7 col-md-3 col-lg-2"><span class="fw-bold">/myorders/</span></div>
-          <div class="col-12 col-md-7 col-lg-8"><span>Retrieve a list of orders by ip address (default), name or phone
-              (optional)</span>
+
+      <div class="accordion mb-2" id="orders-api-two">
+        <div class="accordion-item border-success border">
+          <h2 class="accordion-header">
+            <button class="accordion-button bg-success bg-opacity-10" type="button" data-mdb-toggle="collapse"
+              data-mdb-target="#api-four" data-mdb-collapse-init>
+              <div class="row w-100 row-gap-2 align-items-center">
+                <div class="col-5 col-md-2 col-lg-1">
+                  <span class="w-100 fs-6 badge bg-opacity-75 text-bg-success">POST</span>
+                </div>
+                <div class="col-7 col-md-3 col-lg-2"><span class="fw-bold">/order/myorders/</span></div>
+                <div class="col-12 col-md-7 col-lg-8"><span>Rate a lesson</span></div>
+              </div>
+            </button>
+          </h2>
+          <div id="api-four" class="accordion-collapse collapse" data-mdb-parent="#orders-api-two">
+            <div class="accordion-body"></div>
           </div>
         </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="container pt-5 my-5">
+    <h2 class="fw-bolder">Administration</h2>
+    <p class="mb-4">These actions are password protected.</p>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+      <div class="col">
+        <form action="" method="post" class="bg-primary bg-opacity-10 border-primary border p-5 rounded-7 text-center">
+          <h5 class="fw-semibold">Update lesson spaces</h5>
+          <div class="my-3">
+            <select name="lessonId" id="lessonId" data-mdb-select-init data-mdb-size="lg">
+              <option value="">All</option>
+            </select>
+            <label class="form-label select-label" for="lessonId">Lesson</label>
+          </div>
+          <div class="form-outline my-3" data-mdb-input-init>
+            <input type="text" name="spaces" value="5" id="spaces" class="form-control form-control-lg" />
+            <label class="form-label" for="spaces">Spaces</label>
+          </div>
+          <button type="submit" class="btn btn-lg w-100 btn-primary">Update</button>
+        </form>
       </div>
     </div>
   </div>
@@ -112,6 +157,79 @@
   </footer>
 
   <script src="https://bonafideboss.github.io/AfterSchool/assets/mdbootstrap.7.1.0/mdb.umd.js"></script>
+  <script>
+    if (window.history.replaceState) {
+      window.history.replaceState(null, null, window.location.href);
+    }
+
+    async function getLessons() {
+      const URL = `/lessons`;
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}),
+      };
+      const response = await fetch(URL, requestOptions);
+      const lessons = await response.json();
+      var lessonOptions = ""
+      lessons.forEach(lesson => {
+        lessonOptions += `<option value="${lesson._id}">${lesson.subject}</option>`
+      });
+      document.querySelector('#lessonId').insertAdjacentHTML("beforeend", lessonOptions)
+    }
+    getLessons()
+
+    document.querySelectorAll('form').forEach(form => {
+      form.addEventListener('submit', (event) => {
+        event.preventDefault()
+        const submitBtn = form.querySelector('[type="submit"]')
+        submitBtn.disabled = true
+        submitBtn.innerHTML = `<div class="d-flex gap-2 align-items-center justify-content-center">
+          <span class="spinner-border spinner-border-sm"></span> Please wait...
+        </div>`
+
+        const newInput = document.createElement('input');
+        newInput.type = 'hidden';
+        newInput.name = 'password';
+        newInput.value = prompt("Enter password");
+        form.appendChild(newInput)
+
+        form.submit()
+      })
+    });
+
+    function notify(message, color = 'info', delay = 10000) {
+      const toast = document.createElement('div');
+      toast.innerHTML = `
+        <div class="toast-header">
+          <strong class="me-auto">AfterSchool</strong>
+          <small>Now</small>
+          <button type="button" class="btn-close" data-mdb-dismiss="toast"></button>
+        </div>
+        <div class="toast-body">${message}</div>
+      `;
+
+      toast.classList.add('toast', 'fade');
+
+      document.body.appendChild(toast);
+
+      const toastInstance = new mdb.Toast(toast, {
+        stacking: true,
+        hidden: true,
+        position: 'top-right',
+        autohide: true,
+        delay: delay,
+        animation: true,
+        color: color,
+      });
+
+      toastInstance.show();
+    }
+  </script>
+
+  <% systemMessages.forEach(message=> { %>
+    <script>notify("<%= message.message %>", color = "<%= message.color %>")</script>
+    <% }) %>
 </body>
 
 </html>

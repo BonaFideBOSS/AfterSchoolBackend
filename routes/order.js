@@ -29,6 +29,7 @@ order.post("/new/", async (req, res) => {
     await session.commitTransaction();
 
     orderStatus.orderSuccessful = true;
+    orderStatus.errorMessage = "";
   } catch (error) {
     console.error("Error processing order", error);
     await session.abortTransaction();
@@ -114,6 +115,7 @@ order.post("/myorders/", async (req, res) => {
         from: "Lessons",
         localField: "booked_lessons._id",
         foreignField: "_id",
+        pipeline: [{ $addFields: { my_rating: userRatingQuery(req) } }],
         as: "lessonDetails",
       },
     },
@@ -143,5 +145,27 @@ order.post("/myorders/", async (req, res) => {
   const data = await db.collection("Orders").aggregate(pipeline).toArray();
   res.send(data);
 });
+
+const userRatingQuery = (req) => {
+  return {
+    $let: {
+      vars: {
+        userRating: {
+          $arrayElemAt: [
+            {
+              $filter: {
+                input: "$ratings",
+                as: "rating",
+                cond: { $eq: ["$$rating.ip_address", req.ip] },
+              },
+            },
+            0,
+          ],
+        },
+      },
+      in: { $ifNull: ["$$userRating.rating", 0] },
+    },
+  };
+};
 
 module.exports = order;

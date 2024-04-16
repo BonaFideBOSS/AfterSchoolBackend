@@ -8,12 +8,10 @@ app.set("trust proxy", true);
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
 app.use(express.json());
-app.use(cors());
+app.use(express.urlencoded({ extended: true }));
 
-const corsOptions = {
-  origin: "https://bonafideboss.github.io/AfterSchool/",
-  optionsSuccessStatus: 200,
-};
+const corsOptions = require("./config/cors");
+app.use(cors(corsOptions));
 
 const logRequest = require("./middlewares/logger");
 app.use(logRequest());
@@ -22,11 +20,9 @@ const homeRouter = require("./routes/home");
 app.use("/", homeRouter);
 
 const lessonRouter = require("./routes/lesson");
-lessonRouter.use(cors(corsOptions));
 app.use("/lessons", lessonRouter);
 
 const orderRouter = require("./routes/order");
-orderRouter.use(cors(corsOptions));
 app.use("/order", orderRouter);
 
 app.listen(PORT, () => console.log(`Server is running on PORT ${PORT}`));
