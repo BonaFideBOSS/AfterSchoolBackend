@@ -25,4 +25,8 @@ app.use("/lessons", lessonRouter);
 const orderRouter = require("./routes/order");
 app.use("/order", orderRouter);
 
+app.all("*", (req, res) => {
+  res.render("404.ejs");
+});
+
 app.listen(PORT, () => console.log(`Server is running on PORT ${PORT}`));

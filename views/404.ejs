@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 - AfterSchool Server</title>
+  <link rel="shortcut icon" href="https://bonafideboss.github.io/AfterSchool/assets/images/favicon.ico"
+    type="image/x-icon">
+
+  <link rel="stylesheet" href="https://bonafideboss.github.io/AfterSchool/assets/mdbootstrap.7.1.0/mdb.css">
+  <link rel="stylesheet" href="https://bonafideboss.github.io/AfterSchool/assets/style.css">
+</head>
+
+<body>
+  <div class="container my-5">
+    <h1 class="display-1 fw-bolder">404 - Page not found</h1>
+    <p class="my-3">Oops, the page you're looking for has been moved or never existed.</p>
+    <a href="/" class="btn btn-lg btn-primary">Go back to homepage</a>
+  </div>
+
+  <footer class="py-4">
+    <div class="container small d-flex flex-column flex-lg-row justify-content-lg-between gap-2 text-center">
+      <% const year=new Date().getFullYear() %>
+        <p class="mb-0">&copy <%= year !=2024 ? `2024 - ${year}` : '2024' %> AfterSchool</p>
+        <p class="mb-0">Developed by Amaan Al Mir - M00999011</p>
+        <a href="mailto:am4013@live.mdx.ac.uk">am4013@live.mdx.ac.uk</a>
+    </div>
+  </footer>
+
+  <script src="https://bonafideboss.github.io/AfterSchool/assets/mdbootstrap.7.1.0/mdb.umd.js"></script>
+  <script>
+    if (window.history.replaceState) {
+      window.history.replaceState(null, null, window.location.href);
+    }
+  </script>
+</body>
+
+</html>

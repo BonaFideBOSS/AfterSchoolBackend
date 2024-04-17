@@ -5,6 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AfterSchool Server</title>
+  <link rel="shortcut icon" href="https://bonafideboss.github.io/AfterSchool/assets/images/favicon.ico"
+    type="image/x-icon">
 
   <link rel="stylesheet" href="https://bonafideboss.github.io/AfterSchool/assets/mdbootstrap.7.1.0/mdb.css">
   <link rel="stylesheet" href="https://bonafideboss.github.io/AfterSchool/assets/style.css">
@@ -150,9 +152,10 @@
 
   <footer class="py-4">
     <div class="container small d-flex flex-column flex-lg-row justify-content-lg-between gap-2 text-center">
-      <p class="mb-0">&copy 2024 AfterSchool</p>
-      <p class="mb-0">Developed by Amaan Al Mir - M00999011</p>
-      <a href="mailto:am4013@live.mdx.ac.uk">am4013@live.mdx.ac.uk</a>
+      <% const year=new Date().getFullYear() %>
+        <p class="mb-0">&copy <%= year !=2024 ? `2024 - ${year}` : '2024' %> AfterSchool</p>
+        <p class="mb-0">Developed by Amaan Al Mir - M00999011</p>
+        <a href="mailto:am4013@live.mdx.ac.uk">am4013@live.mdx.ac.uk</a>
     </div>
   </footer>
 
