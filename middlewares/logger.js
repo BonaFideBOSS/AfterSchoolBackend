@@ -16,7 +16,7 @@ function logRequest(filename = "logs.txt") {
 
   return (req, res, next) => {
     var log = `${date} - ${req.ip} "${req.method} ${req.path} ${res.statusCode}"`;
-    console.log(log);
+    console.log(log, req.body);
     // fs.appendFile(`./logs/${filename}`, `${log}\n`, () => next());
     next();
   };

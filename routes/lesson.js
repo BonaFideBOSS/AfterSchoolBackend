@@ -11,10 +11,6 @@ lesson.post("/", async (req, res) => {
   const sortOrder = params.sortOrder == "desc" ? -1 : 1;
   const pipeline = [];
 
-  if (search) {
-    console.log("Search query: " + search);
-  }
-
   const searchFields = ["subject", "location"];
   var searchQuery = {
     $or: searchFields.map((item) => ({
