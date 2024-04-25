@@ -1,4 +1,7 @@
-# AfterSchool - Web App with the MEVN Stack
+<h1>
+  <span>AfterSchool - Web App with the MEVN Stack</span>
+  <img src="https://bonafideboss.github.io/AfterSchoolFrontend/assets/images/favicon.ico" align="left"/>
+</h1>
 
 Module: Web-Based Mobile App Development (CST3145) - Coursework 2
 
