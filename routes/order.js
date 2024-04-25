@@ -101,7 +101,7 @@ order.post("/myorders/", async (req, res) => {
   var query = {
     $or: [
       { username: { $regex: new RegExp(`^${search}$`, "i") } },
-      { phone: search },
+      { phone: parseInt(search) },
     ],
   };
   query = search ? query : { ip_address: req.ip };
