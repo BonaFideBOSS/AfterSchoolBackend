@@ -10,6 +10,13 @@
 
   <link rel="stylesheet" href="https://bonafideboss.github.io/AfterSchool/assets/mdbootstrap.7.1.0/mdb.css">
   <link rel="stylesheet" href="https://bonafideboss.github.io/AfterSchool/assets/style.css">
+  <link rel="stylesheet" href="atom-one-dark.min.css">
+
+  <style>
+    .code {
+      white-space: pre;
+    }
+  </style>
 </head>
 
 <body>
@@ -52,7 +59,22 @@
             </button>
           </h2>
           <div id="api-one" class="accordion-collapse collapse" data-mdb-parent="#lesson-api-one">
-            <div class="accordion-body"></div>
+            <div class="accordion-body">
+              <div class="code language-javascript small rounded-3">
+                async function getLessons() {
+                  const response = await fetch("API_URL/lessons", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      search: "",
+                      sortBy: "subject",
+                      sortOrder: "asc",
+                    }),
+                  });
+                  return await response.json();
+                }                
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -72,7 +94,21 @@
             </button>
           </h2>
           <div id="api-two" class="accordion-collapse collapse" data-mdb-parent="#lesson-api-two">
-            <div class="accordion-body"></div>
+            <div class="accordion-body">
+              <div class="code language-javascript small rounded-3">
+                async function rateLesson() {
+                  const response = await fetch("API_URL/lessons/rate", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      lessonId: "12as1541sa",
+                      rating: 5,
+                    }),
+                  });
+                  return await response.json();
+                }
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -98,7 +134,29 @@
             </button>
           </h2>
           <div id="api-three" class="accordion-collapse collapse" data-mdb-parent="#orders-api-one">
-            <div class="accordion-body"></div>
+            <div class="accordion-body">
+              <div class="code language-javascript small rounded-3">
+                async function submitOrder() {
+                  const response = await fetch("API_URL/order/new", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      username: "amaan",
+                      phone: 123456,
+                      booked_lessons: [
+                        {
+                          _id: "as461as86d41",
+                          quantity: 1,
+                          total: 100,
+                        },
+                      ],
+                      total_price: 100,
+                    }),
+                  });
+                  return await response.json();
+                }
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -113,12 +171,25 @@
                   <span class="w-100 fs-6 badge bg-opacity-75 text-bg-success">POST</span>
                 </div>
                 <div class="col-7 col-md-3 col-lg-2"><span class="fw-bold">/order/myorders/</span></div>
-                <div class="col-12 col-md-7 col-lg-8"><span>Rate a lesson</span></div>
+                <div class="col-12 col-md-7 col-lg-8"><span>Get user's order history</span></div>
               </div>
             </button>
           </h2>
           <div id="api-four" class="accordion-collapse collapse" data-mdb-parent="#orders-api-two">
-            <div class="accordion-body"></div>
+            <div class="accordion-body">
+              <div class="code language-javascript small rounded-3">
+                async function getOrders() {
+                  const response = await fetch("API_URL/order/myorders", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      search: "",
+                    }),
+                  });
+                  return await response.json();
+                }
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -141,7 +212,7 @@
             <label class="form-label select-label" for="lessonId">Lesson</label>
           </div>
           <div class="form-outline my-3" data-mdb-input-init>
-            <input type="text" name="spaces" value="5" id="spaces" class="form-control form-control-lg" />
+            <input type="number" name="spaces" value="5" id="spaces" class="form-control form-control-lg" />
             <label class="form-label" for="spaces">Spaces</label>
           </div>
           <button type="submit" class="btn btn-lg w-100 btn-primary">Update</button>
@@ -160,20 +231,32 @@
   </footer>
 
   <script src="https://bonafideboss.github.io/AfterSchool/assets/mdbootstrap.7.1.0/mdb.umd.js"></script>
+  <script src="highlight.min.js"></script>
+
   <script>
+    document.querySelectorAll('.code').forEach(el => {
+      el.textContent = el.textContent.replace('API_URL', `https://${location.hostname}`)
+      hljs.highlightElement(el);
+    });
+
     if (window.history.replaceState) {
       window.history.replaceState(null, null, window.location.href);
     }
 
     async function getLessons() {
+      var lessons = []
       const URL = `/lessons`;
       const requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({}),
       };
-      const response = await fetch(URL, requestOptions);
-      const lessons = await response.json();
+      try {
+        const response = await fetch(URL, requestOptions);
+        lessons = await response.json();
+      } catch (error) {
+        console.log("Error getting list of lessons: " + error)
+      }
       var lessonOptions = ""
       lessons.forEach(lesson => {
         lessonOptions += `<option value="${lesson._id}">${lesson.subject}</option>`
