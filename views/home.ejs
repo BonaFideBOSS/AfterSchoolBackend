@@ -12,14 +12,6 @@
   <link rel="stylesheet" href="https://bonafideboss.github.io/AfterSchoolFrontend/assets/mdbootstrap.7.1.0/mdb.css">
   <link rel="stylesheet" href="https://bonafideboss.github.io/AfterSchoolFrontend/assets/css/style.css">
   <link rel="stylesheet" href="atom-one-dark.min.css">
-
-  <style>
-    .code {
-      white-space: pre;
-      overflow: hidden;
-      overflow-x: auto;
-    }
-  </style>
 </head>
 
 <body>
@@ -63,20 +55,18 @@
           </h2>
           <div id="api-one" class="accordion-collapse collapse" data-mdb-parent="#lesson-api-one">
             <div class="accordion-body">
-              <div class="code language-javascript small rounded-3">
-                async function getLessons() {
-                  const response = await fetch("API_URL/lessons", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                      search: "",
-                      sortBy: "subject",
-                      sortOrder: "asc",
-                    }),
-                  });
-                  return await response.json();
-                }                
-              </div>
+              <pre class="code">async function getLessons() {
+  const response = await fetch("API_URL/lessons", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      search: "",
+      sortBy: "subject",
+      sortOrder: "asc",
+    }),
+  });
+  return await response.json();
+}</pre>
             </div>
           </div>
         </div>
@@ -98,19 +88,17 @@
           </h2>
           <div id="api-two" class="accordion-collapse collapse" data-mdb-parent="#lesson-api-two">
             <div class="accordion-body">
-              <div class="code language-javascript small rounded-3">
-                async function rateLesson() {
-                  const response = await fetch("API_URL/lessons/rate", {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                      lessonId: "12as1541sa",
-                      rating: 5,
-                    }),
-                  });
-                  return await response.json();
-                }
-              </div>
+              <pre class="code">async function rateLesson() {
+  const response = await fetch("API_URL/lessons/rate", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      lessonId: "12as1541sa",
+      rating: 5,
+    }),
+  });
+  return await response.json();
+}</pre>
             </div>
           </div>
         </div>
@@ -138,27 +126,25 @@
           </h2>
           <div id="api-three" class="accordion-collapse collapse" data-mdb-parent="#orders-api-one">
             <div class="accordion-body">
-              <div class="code language-javascript small rounded-3">
-                async function submitOrder() {
-                  const response = await fetch("API_URL/order/new", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                      username: "amaan",
-                      phone: 123456,
-                      booked_lessons: [
-                        {
-                          _id: "as461as86d41",
-                          quantity: 1,
-                          total: 100,
-                        },
-                      ],
-                      total_price: 100,
-                    }),
-                  });
-                  return await response.json();
-                }
-              </div>
+              <pre class="code">async function submitOrder() {
+  const response = await fetch("API_URL/order/new", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username: "amaan",
+      phone: 123456,
+      booked_lessons: [
+        {
+          _id: "as461as86d41",
+          quantity: 1,
+          total: 100,
+        },
+      ],
+      total_price: 100,
+    }),
+  });
+  return await response.json();
+}</pre>
             </div>
           </div>
         </div>
@@ -180,18 +166,16 @@
           </h2>
           <div id="api-four" class="accordion-collapse collapse" data-mdb-parent="#orders-api-two">
             <div class="accordion-body">
-              <div class="code language-javascript small rounded-3">
-                async function getOrders() {
-                  const response = await fetch("API_URL/order/myorders", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                      search: "",
-                    }),
-                  });
-                  return await response.json();
-                }
-              </div>
+              <pre class="code">async function getOrders() {
+  const response = await fetch("API_URL/order/myorders", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      search: "",
+    }),
+  });
+  return await response.json();
+}</pre>
             </div>
           </div>
         </div>
@@ -234,87 +218,8 @@
   </footer>
 
   <script src="https://bonafideboss.github.io/AfterSchoolFrontend/assets/mdbootstrap.7.1.0/mdb.umd.js"></script>
-  <script src="highlight.min.js"></script>
-
-  <script>
-    document.querySelectorAll('.code').forEach(el => {
-      el.textContent = el.textContent.replace('API_URL', `https://${location.hostname}`)
-      hljs.highlightElement(el);
-    });
-
-    if (window.history.replaceState) {
-      window.history.replaceState(null, null, window.location.href);
-    }
-
-    async function getLessons() {
-      var lessons = []
-      const URL = `/lessons`;
-      const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({}),
-      };
-      try {
-        const response = await fetch(URL, requestOptions);
-        lessons = await response.json();
-      } catch (error) {
-        console.log("Error getting list of lessons: " + error)
-      }
-      var lessonOptions = ""
-      lessons.forEach(lesson => {
-        lessonOptions += `<option value="${lesson._id}">${lesson.subject}</option>`
-      });
-      document.querySelector('#lessonId').insertAdjacentHTML("beforeend", lessonOptions)
-    }
-    getLessons()
-
-    document.querySelectorAll('form').forEach(form => {
-      form.addEventListener('submit', (event) => {
-        event.preventDefault()
-        const submitBtn = form.querySelector('[type="submit"]')
-        submitBtn.disabled = true
-        submitBtn.innerHTML = `<div class="d-flex gap-2 align-items-center justify-content-center">
-          <span class="spinner-border spinner-border-sm"></span> Please wait...
-        </div>`
-
-        const newInput = document.createElement('input');
-        newInput.type = 'hidden';
-        newInput.name = 'password';
-        newInput.value = prompt("Enter password");
-        form.appendChild(newInput)
-
-        form.submit()
-      })
-    });
-
-    function notify(message, color = 'info', delay = 10000) {
-      const toast = document.createElement('div');
-      toast.innerHTML = `
-        <div class="toast-header">
-          <strong class="me-auto">AfterSchool</strong>
-          <small>Now</small>
-          <button type="button" class="btn-close" data-mdb-dismiss="toast"></button>
-        </div>
-        <div class="toast-body">${message}</div>
-      `;
-
-      toast.classList.add('toast', 'fade');
-
-      document.body.appendChild(toast);
-
-      const toastInstance = new mdb.Toast(toast, {
-        stacking: true,
-        hidden: true,
-        position: 'top-right',
-        autohide: true,
-        delay: delay,
-        animation: true,
-        color: color,
-      });
-
-      toastInstance.show();
-    }
-  </script>
+  <script type="module" src="code-highlighter.js"></script>
+  <script src="script.js"></script>
 
   <% systemMessages.forEach(message=> { %>
     <script>notify("<%= message.message %>", color = "<%= message.color %>")</script>
