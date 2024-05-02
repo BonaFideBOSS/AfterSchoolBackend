@@ -4,15 +4,15 @@ const cors = require("cors");
 
 const app = express();
 const PORT = process.env.PORT || 8000;
+const corsOptions = require("./config/cors");
+
+app.use(cors(corsOptions(true)));
 app.set("trust proxy", true);
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
 app.use(express.static(__dirname + "/assets"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-const corsOptions = require("./config/cors");
-app.use(cors(corsOptions));
 
 const logRequest = require("./middlewares/logger");
 app.use(logRequest());

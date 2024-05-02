@@ -1,8 +1,11 @@
 const express = require("express");
+const cors = require("cors");
+const corsOptions = require("../config/cors");
 const { db, client } = require("../config/database");
 const { ObjectId } = require("mongodb");
 
 const order = express.Router();
+order.use(cors(corsOptions()));
 
 order.post("/new/", async (req, res) => {
   const order = req.body;

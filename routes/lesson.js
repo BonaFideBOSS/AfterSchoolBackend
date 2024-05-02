@@ -1,8 +1,11 @@
 const express = require("express");
+const cors = require("cors");
+const corsOptions = require("../config/cors");
 const { db } = require("../config/database");
 const { ObjectId } = require("mongodb");
 
 const lesson = express.Router();
+lesson.use(cors(corsOptions()));
 
 lesson.post("/", async (req, res) => {
   const params = req.body;

@@ -1,13 +1,19 @@
-const corsOptions = {
-  origin: function (origin, callback) {
-    console.log("Request origin", origin);
-    const allowedOrigins = process.env.allowedOrigins;
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+const corsOptions = (proxyAllowed = false) => {
+  return {
+    origin: function (origin, callback) {
+      console.log("Request origin", origin);
+      const allowedOrigins = process.env.allowedOrigins;
+      var isAllowed = allowedOrigins.indexOf(origin) !== -1;
+      if (proxyAllowed) {
+        isAllowed = !origin || isAllowed;
+      }
+      if (isAllowed) {
+        callback(null, true);
+      } else {
+        callback(new Error("Access Blocked"));
+      }
+    },
+  };
 };
 
 module.exports = corsOptions;
