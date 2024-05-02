@@ -1,7 +1,6 @@
 const express = require("express");
 const { db } = require("../config/database");
 const { ObjectId } = require("mongodb");
-const lesson = require("./lesson");
 
 const home = express.Router();
 
