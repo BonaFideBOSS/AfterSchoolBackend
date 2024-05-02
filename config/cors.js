@@ -10,7 +10,7 @@ const corsOptions = (proxyAllowed = false) => {
       if (isAllowed) {
         callback(null, true);
       } else {
-        callback(new Error("Access Blocked"));
+        callback("Access Blocked", false);
       }
     },
   };
