@@ -24,7 +24,6 @@ async function getLessons() {
     .querySelector("#lessonId")
     .insertAdjacentHTML("beforeend", lessonOptions);
 }
-getLessons();
 
 document.querySelectorAll("form").forEach((form) => {
   form.addEventListener("submit", (event) => {

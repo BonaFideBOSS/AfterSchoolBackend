@@ -218,8 +218,11 @@
   </footer>
 
   <script src="https://bonafideboss.github.io/AfterSchoolFrontend/assets/mdbootstrap.7.1.0/mdb.umd.js"></script>
+  <script src="script.js"></script>
 
   <script type="module">
+    getLessons()
+
     import { codeToHtml } from "https://esm.sh/shiki@1.4.0";
 
     document.querySelectorAll(".code").forEach((el) => {
@@ -239,8 +242,6 @@
       });
     });
   </script>
-
-  <script src="script.js"></script>
 
   <% systemMessages.forEach(message=> { %>
     <script>notify("<%= message.message %>", color = "<%= message.color %>")</script>
