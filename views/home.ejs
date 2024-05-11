@@ -10,6 +10,7 @@
     type="image/x-icon">
 
   <link rel="stylesheet" href="https://bonafideboss.github.io/AfterSchoolFrontend/assets/mdbootstrap.7.1.0/mdb.css">
+  <link rel="stylesheet" href="https://bonafideboss.github.io/AfterSchoolFrontend/assets/fontawesome.6.5.1/css/all.css">
   <link rel="stylesheet" href="https://bonafideboss.github.io/AfterSchoolFrontend/assets/css/style.css">
   <link rel="stylesheet" href="atom-one-dark.min.css">
 </head>
@@ -190,7 +191,7 @@
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
       <div class="col">
-        <form action="" method="post" class="bg-primary bg-opacity-10 border-primary border p-5 rounded-7 text-center">
+        <form action="/lessons/updateLessonSpaces" method="post" class="bg-primary bg-opacity-10 border-primary border p-5 rounded-7 text-center">
           <h5 class="fw-semibold">Update lesson spaces</h5>
           <div class="my-3">
             <select name="lessonId" id="lessonId" data-mdb-select-init data-mdb-size="lg">
@@ -203,6 +204,52 @@
             <label class="form-label" for="spaces">Spaces</label>
           </div>
           <button type="submit" class="btn btn-lg w-100 btn-primary">Update</button>
+        </form>
+      </div>
+
+      <div class="col">
+        <form action="/lessons/new" method="post" class="bg-success bg-opacity-10 border-success border p-5 rounded-7 text-center">
+          <h5 class="fw-semibold">Add new lesson</h5>
+          <div class="d-flex flex-column gap-3 my-3">
+            <div class="form-outline" data-mdb-input-init>
+              <input type="text" name="subject" id="subject" class="form-control form-control-lg" required />
+              <label class="form-label" for="subject">Subject</label>
+            </div>
+
+            <div class="form-outline" data-mdb-input-init>
+              <input type="text" name="location" id="location" class="form-control form-control-lg" required />
+              <label class="form-label" for="location">Location</label>
+            </div>
+
+            <div class="form-outline" data-mdb-input-init>
+              <input type="number" name="price" id="price" class="form-control form-control-lg" required />
+              <label class="form-label" for="price">Price</label>
+            </div>
+
+            <div class="form-outline" data-mdb-input-init>
+              <input type="number" name="spaces" value="5" id="spaces" class="form-control form-control-lg" required />
+              <label class="form-label" for="spaces">Spaces</label>
+            </div>
+
+            <div class="form-outline" data-mdb-input-init>
+              <i class="fa-duotone fa-exclamation-circle trailing text-primary"></i>
+              <input type="text" name="icon" id="icon" value="fa-" class="form-control form-control-lg" required />
+              <label class="form-label" for="icon">Icon</label>
+            </div>
+
+            <div>
+              <select name="color" id="color" data-mdb-select-init data-mdb-size="lg">
+                <% const colors=['primary','danger', 'success' ,'secondary','warning','info','light','dark'] %>
+                  <% colors.forEach(color=> { %>
+                    <option value="<%= color %>">
+                      <%= color.charAt(0).toUpperCase() + color.slice(1) %>
+                    </option>
+                    <% }) %>
+              </select>
+              <label class="form-label select-label" for="color">Color</label>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-lg w-100 btn-success">Add</button>
         </form>
       </div>
     </div>
@@ -219,6 +266,28 @@
 
   <script src="https://bonafideboss.github.io/AfterSchoolFrontend/assets/mdbootstrap.7.1.0/mdb.umd.js"></script>
   <script src="script.js"></script>
+
+  <script>
+    document.querySelectorAll('[name="icon"]').forEach(el => {
+      el.addEventListener('input', () => {
+        const icon = el.value
+        const iconEl = el.parentNode.querySelector('i')
+        const classes = iconEl.className.split(" ").filter(c => !c.startsWith('fa-'));
+        classes.push('fa-duotone', icon)
+        iconEl.className = classes.join(" ").trim();
+      })
+    })
+
+    document.querySelectorAll('[name="color"]').forEach(el => {
+      el.addEventListener('change', () => {
+        const iconColor = el.value
+        const iconEl = el.parentElement.parentElement.previousElementSibling.querySelector('i')
+        const classes = iconEl.className.split(" ").filter(c => !c.startsWith('text-'));
+        classes.push(`text-${iconColor}`)
+        iconEl.className = classes.join(" ").trim();
+      })
+    })
+  </script>
 
   <script type="module">
     getLessons()

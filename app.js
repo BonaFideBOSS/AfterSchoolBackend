@@ -1,6 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const flash = require("express-flash");
+const session = require("express-session");
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -13,6 +15,14 @@ app.set("views", __dirname + "/views");
 app.use(express.static(__dirname + "/assets"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(
+  session({
+    secret: process.env.SECRET_KEY,
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+app.use(flash());
 
 const logRequest = require("./middlewares/logger");
 app.use(logRequest());

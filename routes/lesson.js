@@ -3,6 +3,7 @@ const cors = require("cors");
 const corsOptions = require("../config/cors");
 const { db } = require("../config/database");
 const { ObjectId } = require("mongodb");
+const { isUserAdmin } = require("../helpers/helpers");
 
 const lesson = express.Router();
 lesson.use(cors(corsOptions()));
@@ -12,6 +13,9 @@ lesson.post("/", async (req, res) => {
   const search = params.search || "";
   const sortBy = params.sortBy || "subject";
   const sortOrder = params.sortOrder == "desc" ? -1 : 1;
+  var page = parseInt(params.page) || 1;
+  page = page > 0 ? page : 1;
+  const length = parseInt(params.length) || 5;
   const pipeline = [];
 
   const searchFields = ["subject", "location"];
@@ -20,7 +24,8 @@ lesson.post("/", async (req, res) => {
       [item]: { $regex: search, $options: "i" },
     })),
   };
-  searchQuery = search ? pipeline.push({ $match: searchQuery }) : {};
+  searchQuery = search ? searchQuery : {};
+  pipeline.push({ $match: searchQuery });
   pipeline.push({
     $addFields: {
       average_rating: { $round: [{ $avg: "$ratings.rating" }, 1] },
@@ -28,8 +33,77 @@ lesson.post("/", async (req, res) => {
   });
   pipeline.push({ $sort: { [sortBy]: sortOrder } });
 
-  const data = await db.collection("Lessons").aggregate(pipeline).toArray();
+  const collection = db.collection("Lessons");
+  const lessonsCountTotal = collection.countDocuments({});
+  const lessonsCountFiltered = collection.countDocuments(searchQuery);
+  var data = [lessonsCountTotal, lessonsCountFiltered];
+  data = await Promise.all(data);
+
+  var totalPages = Math.ceil(data[1] / length);
+  page = page > totalPages && totalPages > 0 ? totalPages : page;
+  const skip = (page - 1) * length;
+  pipeline.push({ $skip: skip }, { $limit: length });
+
+  const lessons = await collection.aggregate(pipeline).toArray();
+  data = {
+    lessons: lessons,
+    pagination: {
+      page: page,
+      length: length,
+      total: data[0],
+      filtered: data[1],
+      totalPages: totalPages,
+      start: (page - 1) * length + 1,
+    },
+  };
+  data.pagination.end = Math.min(
+    data.pagination.start + length - 1,
+    data.pagination.filtered
+  );
   res.send(data);
+});
+
+lesson.post("/new/", async (req, res) => {
+  const message = { message: "", color: "info" };
+  try {
+    isUserAdmin(req.body.password);
+    const lesson = req.body;
+    lesson.price = parseInt(lesson.price);
+    lesson.spaces = parseInt(lesson.spaces);
+    await db.collection("Lessons").insertOne(lesson);
+    message.message = "Lesson added successfully.";
+    message.color = "success";
+  } catch (error) {
+    message.message = "Failed to add lesson. " + error;
+    message.color = "danger";
+  }
+  req.flash("systemMessages", [message]);
+  res.redirect("/");
+});
+
+lesson.post("/updateLessonSpaces", async (req, res) => {
+  const message = { message: "", color: "info" };
+  try {
+    isUserAdmin(req.body.password);
+    const lessonId = req.body.lessonId;
+    const lesson = lessonId ? { _id: new ObjectId(lessonId) } : {};
+    const spaces = parseInt(req.body.spaces);
+
+    if (!(spaces >= 0)) {
+      throw Error("Spaces must be 0 or more.");
+    }
+
+    await db
+      .collection("Lessons")
+      .updateMany(lesson, { $set: { spaces: spaces } });
+    message.message = "Lessons updated successfully.";
+    message.color = "success";
+  } catch (error) {
+    message.message = "Failed to update lessons. " + error;
+    message.color = "danger";
+  }
+  req.flash("systemMessages", [message]);
+  res.redirect("/");
 });
 
 lesson.put("/rate/", async (req, res) => {

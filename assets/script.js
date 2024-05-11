@@ -11,8 +11,9 @@ async function getLessons() {
     body: JSON.stringify({}),
   };
   try {
-    const response = await fetch(URL, requestOptions);
-    lessons = await response.json();
+    var response = await fetch(URL, requestOptions);
+    response = await response.json();
+    lessons = response.lessons
   } catch (error) {
     console.log("Error getting list of lessons: " + error);
   }
