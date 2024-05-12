@@ -101,6 +101,10 @@ async function updateLessons(cart, session) {
 order.post("/myorders/", async (req, res) => {
   const params = req.body;
   const search = params.search || "";
+  var page = parseInt(params.page) || 1;
+  page = page > 0 ? page : 1;
+  const length = parseInt(params.length) || 5;
+
   var query = {
     $or: [
       { username: { $regex: new RegExp(`^${search}$`, "i") } },
@@ -108,7 +112,7 @@ order.post("/myorders/", async (req, res) => {
     ],
   };
   query = search ? query : { ip_address: req.ip };
-  var pipeline = [
+  const pipeline = [
     { $match: query },
     {
       $unwind: "$booked_lessons",
@@ -145,7 +149,33 @@ order.post("/myorders/", async (req, res) => {
     },
     { $sort: { datetime: -1 } },
   ];
-  const data = await db.collection("Orders").aggregate(pipeline).toArray();
+  const collection = db.collection("Orders");
+  const dataCountTotal = collection.countDocuments(query);
+  const dataCountFiltered = collection.countDocuments(query);
+  var data = [dataCountTotal, dataCountFiltered];
+  data = await Promise.all(data);
+
+  var totalPages = Math.ceil(data[1] / length);
+  page = page > totalPages && totalPages > 0 ? totalPages : page;
+  const skip = (page - 1) * length;
+  pipeline.push({ $skip: skip }, { $limit: length });
+
+  const orders = await collection.aggregate(pipeline).toArray();
+  data = {
+    orders: orders,
+    pagination: {
+      page: page,
+      length: length,
+      total: data[0],
+      filtered: data[1],
+      totalPages: totalPages,
+      start: (page - 1) * length + 1,
+    },
+  };
+  data.pagination.end = Math.min(
+    data.pagination.start + length - 1,
+    data.pagination.filtered
+  );
   res.send(data);
 });
 
