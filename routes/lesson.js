@@ -28,10 +28,11 @@ lesson.post("/", async (req, res) => {
   pipeline.push({ $match: searchQuery });
   pipeline.push({
     $addFields: {
+      rating_count: { $size: "$ratings" },
       average_rating: { $round: [{ $avg: "$ratings.rating" }, 1] },
     },
   });
-  pipeline.push({ $sort: { [sortBy]: sortOrder } });
+  pipeline.push({ $sort: { [sortBy]: sortOrder, subject: 1 } });
 
   const collection = db.collection("Lessons");
   const lessonsCountTotal = collection.countDocuments({});
