@@ -2,18 +2,18 @@ if (window.history.replaceState) {
   window.history.replaceState(null, null, window.location.href);
 }
 
+var lessons = [];
 async function getLessons() {
-  var lessons = [];
   const URL = `/lessons`;
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({}),
+    body: JSON.stringify({ length: 999 }),
   };
   try {
     var response = await fetch(URL, requestOptions);
     response = await response.json();
-    lessons = response.lessons
+    lessons = response.lessons;
   } catch (error) {
     console.log("Error getting list of lessons: " + error);
   }
@@ -22,8 +22,8 @@ async function getLessons() {
     lessonOptions += `<option value="${lesson._id}">${lesson.subject}</option>`;
   });
   document
-    .querySelector("#lessonId")
-    .insertAdjacentHTML("beforeend", lessonOptions);
+    .querySelectorAll(".listOfLessons")
+    .forEach((i) => i.insertAdjacentHTML("beforeend", lessonOptions));
 }
 
 document.querySelectorAll("form").forEach((form) => {

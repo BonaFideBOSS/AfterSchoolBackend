@@ -191,10 +191,12 @@
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
       <div class="col">
-        <form action="/lessons/updateLessonSpaces" method="post" class="bg-primary bg-opacity-10 border-primary border p-5 rounded-7 text-center">
+        <form action="/lessons/updateLessonSpaces" method="post"
+          class="bg-primary bg-opacity-10 border-primary border p-5 rounded-7 text-center">
           <h5 class="fw-semibold">Update lesson spaces</h5>
           <div class="my-3">
-            <select name="lessonId" id="lessonId" data-mdb-select-init data-mdb-size="lg">
+            <select class="listOfLessons" name="lessonId" id="lessonId" data-mdb-select-init data-mdb-size="lg"
+              data-mdb-filter="true">
               <option value="">All</option>
             </select>
             <label class="form-label select-label" for="lessonId">Lesson</label>
@@ -208,7 +210,8 @@
       </div>
 
       <div class="col">
-        <form action="/lessons/new" method="post" class="bg-success bg-opacity-10 border-success border p-5 rounded-7 text-center">
+        <form action="/lessons/new" method="post"
+          class="bg-success bg-opacity-10 border-success border p-5 rounded-7 text-center">
           <h5 class="fw-semibold">Add new lesson</h5>
           <div class="d-flex flex-column gap-3 my-3">
             <div class="form-outline" data-mdb-input-init>
@@ -252,6 +255,62 @@
           <button type="submit" class="btn btn-lg w-100 btn-success">Add</button>
         </form>
       </div>
+
+      <div class="col">
+        <form id="lessonUpdater" action="/lessons/update/" method="post"
+          class="bg-primary bg-opacity-10 border-primary border p-5 rounded-7 text-center">
+          <h5 class="fw-semibold">Update a lesson</h5>
+
+          <div class="my-3">
+            <select class="listOfLessons" name="_id" id="_id" data-mdb-select-init data-mdb-size="lg"
+              data-mdb-filter="true" onchange="updateLessonDetails(this)">
+              <option selected disabled>Select...</option>
+            </select>
+            <label class="form-label select-label" for="_id">Lesson</label>
+          </div>
+
+          <div class="d-flex flex-column gap-3 my-3">
+            <div class="form-outline" data-mdb-input-init>
+              <input type="text" name="subject" id="subject" value="-" class="form-control form-control-lg" required />
+              <label class="form-label" for="subject">Subject</label>
+            </div>
+
+            <div class="form-outline" data-mdb-input-init>
+              <input type="text" name="location" id="location" value="-" class="form-control form-control-lg"
+                required />
+              <label class="form-label" for="location">Location</label>
+            </div>
+
+            <div class="form-outline" data-mdb-input-init>
+              <input type="number" name="price" id="price" value="0" class="form-control form-control-lg" required />
+              <label class="form-label" for="price">Price</label>
+            </div>
+
+            <div class="form-outline" data-mdb-input-init>
+              <input type="number" name="spaces" value="5" id="spaces" class="form-control form-control-lg" required />
+              <label class="form-label" for="spaces">Spaces</label>
+            </div>
+
+            <div class="form-outline" data-mdb-input-init>
+              <i class="fa-duotone fa-exclamation-circle trailing text-primary"></i>
+              <input type="text" name="icon" id="icon" value="fa-" class="form-control form-control-lg" required />
+              <label class="form-label" for="icon">Icon</label>
+            </div>
+
+            <div>
+              <select name="color" id="color-update" data-mdb-select-init data-mdb-size="lg">
+                <% colors.forEach(color=> { %>
+                  <option value="<%= color %>">
+                    <%= color.charAt(0).toUpperCase() + color.slice(1) %>
+                  </option>
+                  <% }) %>
+              </select>
+              <label class="form-label select-label" for="color-update">Color</label>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-lg w-100 btn-primary" disabled>Update</button>
+        </form>
+      </div>
     </div>
   </div>
 
@@ -268,6 +327,8 @@
   <script src="script.js"></script>
 
   <script>
+    getLessons()
+
     document.querySelectorAll('[name="icon"]').forEach(el => {
       el.addEventListener('input', () => {
         const icon = el.value
@@ -287,10 +348,25 @@
         iconEl.className = classes.join(" ").trim();
       })
     })
+
+    function updateLessonDetails(id) {
+      const form = document.querySelector('#lessonUpdater')
+      form.querySelector('[type="submit"]').removeAttribute('disabled')
+      const lessonId = id.value
+      var lesson = lessons.filter(lesson => lesson._id === lessonId)
+      if (lesson.length > 0) {
+        lesson = lesson[0]
+        for (const field in lesson) {
+          var formField = form.querySelector(`[name="${field}"]`)
+          if (formField) {
+            formField.value = lesson[field]
+          }
+        }
+      }
+    }
   </script>
 
   <script type="module">
-    getLessons()
 
     import { codeToHtml } from "https://esm.sh/shiki@1.4.0";
 
