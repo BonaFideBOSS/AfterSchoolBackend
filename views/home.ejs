@@ -235,6 +235,11 @@
             </div>
 
             <div class="form-outline" data-mdb-input-init>
+              <input type="text" name="image" id="image" class="form-control form-control-lg" required />
+              <label class="form-label" for="image">Image</label>
+            </div>
+
+            <div class="form-outline" data-mdb-input-init>
               <i class="fa-duotone fa-exclamation-circle trailing text-primary"></i>
               <input type="text" name="icon" id="icon" value="fa-" class="form-control form-control-lg" required />
               <label class="form-label" for="icon">Icon</label>
@@ -242,7 +247,8 @@
 
             <div>
               <select name="color" id="color" data-mdb-select-init data-mdb-size="lg">
-                <% const colors=['primary','danger', 'success' ,'secondary','warning','info','light','dark'] %>
+                <% const colors=['primary', 'danger' , 'success' , 'secondary' , 'warning' , 'info' , 'light' , 'dark'
+                  , 'red' , 'purple' , 'indigo' , 'orange' , 'pink' , 'black' , 'green' ] %>
                   <% colors.forEach(color=> { %>
                     <option value="<%= color %>">
                       <%= color.charAt(0).toUpperCase() + color.slice(1) %>
@@ -289,6 +295,11 @@
             <div class="form-outline" data-mdb-input-init>
               <input type="number" name="spaces" value="5" id="spaces" class="form-control form-control-lg" required />
               <label class="form-label" for="spaces">Spaces</label>
+            </div>
+
+            <div class="form-outline" data-mdb-input-init>
+              <input type="text" name="image" id="image" class="form-control form-control-lg" required />
+              <label class="form-label" for="image">Image</label>
             </div>
 
             <div class="form-outline" data-mdb-input-init>
