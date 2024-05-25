@@ -8,7 +8,7 @@ const {
 } = require("../controllers/ordersController");
 
 const order = express.Router();
-order.use(cors(corsOptions));
+order.use(cors(corsOptions()));
 
 order.post("/new/", createNewOrder);
 order.post("/myorders/", getClientOrders);
