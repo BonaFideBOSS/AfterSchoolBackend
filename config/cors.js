@@ -6,6 +6,7 @@ const corsOptions = (proxyAllowed = false) => {
       if (proxyAllowed) {
         isAllowed = !origin || isAllowed;
       }
+      console.log("CORS: ", origin, isAllowed);
       if (isAllowed) {
         callback(null, true);
       } else {
