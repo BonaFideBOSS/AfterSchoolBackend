@@ -23,6 +23,17 @@ app.use(flash());
 const logRequest = require("./middlewares/logger");
 app.use(logRequest());
 
+app.use((req, res, next) => {
+  const allowedOrigins = process.env.allowedOrigins;
+  var isAllowed = allowedOrigins.indexOf(req.ip) !== -1;
+  console.log("Ip allowed: ", req.ip, isAllowed);
+  if (isAllowed) {
+    next();
+  } else {
+    res.status(400).send("");
+  }
+});
+
 const homeRouter = require("./routes/home");
 app.use("/", homeRouter);
 
