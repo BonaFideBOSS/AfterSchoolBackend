@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const corsOptions = require("../config/cors");
+const apiGuard = require("../middlewares/ipBlocker");
 
 const {
   getAllLessons,
@@ -12,6 +13,7 @@ const {
 
 const lesson = express.Router();
 lesson.use(cors(corsOptions));
+lesson.use(apiGuard());
 
 lesson.post("/", getAllLessons);
 lesson.put("/rate/", rateLesson);
