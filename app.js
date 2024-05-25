@@ -25,8 +25,8 @@ app.use(logRequest());
 
 app.use((req, res, next) => {
   const allowedOrigins = process.env.allowedOrigins;
-  var isAllowed = allowedOrigins.indexOf(req.ip) !== -1;
-  console.log("Ip allowed: ", req.ip, isAllowed);
+  var isAllowed = allowedOrigins.indexOf(req.headers.host) !== -1;
+  console.log("Ip allowed: ", req.headers.host, isAllowed);
   if (isAllowed) {
     next();
   } else {
