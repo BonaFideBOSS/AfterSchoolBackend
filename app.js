@@ -1,14 +1,11 @@
 require("dotenv").config();
 const express = require("express");
-const cors = require("cors");
 const flash = require("express-flash");
 const session = require("express-session");
 
 const app = express();
 const PORT = process.env.PORT || 8000;
-const corsOptions = require("./config/cors");
 
-app.use(cors(corsOptions(true)));
 app.set("trust proxy", true);
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
