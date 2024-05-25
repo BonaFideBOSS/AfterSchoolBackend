@@ -1,8 +1,8 @@
 function apiGuard() {
   return (req, res, next) => {
     const allowedOrigins = process.env.allowedOrigins;
-    var isAllowed = allowedOrigins.indexOf(req.headers.host) !== -1;
-    console.log("Ip allowed: ", req.headers.host, isAllowed);
+    var isAllowed = allowedOrigins.indexOf(req.headers.origin) !== -1;
+    console.log("Ip allowed: ", req.headers.origin, isAllowed);
     if (isAllowed) {
       next();
     } else {
