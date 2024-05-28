@@ -6,6 +6,7 @@ const session = require("express-session");
 const app = express();
 const PORT = process.env.PORT || 8000;
 
+app.set("trust proxy", true);
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
 app.use(express.static(__dirname + "/assets"));
