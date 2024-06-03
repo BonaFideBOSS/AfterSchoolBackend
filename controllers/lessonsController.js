@@ -26,7 +26,11 @@ async function getAllLessons(req, res) {
       average_rating: { $round: [{ $avg: "$ratings.rating" }, 1] },
     },
   });
-  pipeline.push({ $sort: { [sortBy]: sortOrder, subject: 1 } });
+  pipeline.push({ $sort: { [sortBy]: sortOrder } });
+  if (!("subject" in pipeline.at(-1).$sort)) {
+    pipeline.at(-1).$sort.subject = 1;
+  }
+  console.log(pipeline.at(-1));
 
   const collection = db.collection("Lessons");
   const lessonsCountTotal = collection.countDocuments({});
